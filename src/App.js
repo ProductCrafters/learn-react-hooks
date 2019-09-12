@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { fetchArticles, fetchSingleArticle } from './api'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// fetchArticles(0).then(console.log)
+class App extends Component {
+  state = {
+    __html: 'Loading...',
+  }
+
+  componentDidMount() {
+    fetchSingleArticle(24326).then((text) => {
+      this.setState({ __html: text })
+    })
+  }
+
+  render() {
+    const { __html } = this.state
+    return (
+      <div className="App">
+        <div dangerouslySetInnerHTML={{ __html }} />
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
