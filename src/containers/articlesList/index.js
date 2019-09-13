@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchArticles } from '../../api'
+import { fetchArticles } from '../../logic'
 
-class Index extends Component {
-  state = {
-    articles: [],
+class ArticlesList extends Component {
+  componentDidMount() {
+    const { articles, currentPage, fetchArticles, nextStartDate } = this.props
+    if (articles.length > 0) {
+      return
+    }
+
+    fetchArticles(currentPage, nextStartDate)
   }
 
-  componentDidMount() {
-    fetchArticles(0).then((articles) => {
-      this.setState({
-        articles,
-      })
-    })
+  fetchPage = (page, nextDate) => {
+    this.props.fetchArticles(page, nextDate)
   }
 
   render() {
-    const { articles } = this.state
+    const { articles, currentPage, nextStartDate } = this.props
 
     if (articles.length === 0) {
       return (
@@ -32,6 +34,7 @@ class Index extends Component {
         <Row>
           <Col>
             <h3>Updated Articles:</h3>
+            <span>{nextStartDate}</span>
           </Col>
         </Row>
         {articles.map((a) => (
@@ -42,11 +45,30 @@ class Index extends Component {
           </Row>
         ))}
         <Row>
-          <Col>Pagination</Col>
+          <Col>
+            <Row>
+              <p onClick={() => this.fetchPage(currentPage + 1, nextStartDate)}>{currentPage + 1}</p>
+            </Row>
+          </Col>
         </Row>
       </Container>
     )
   }
 }
 
-export default Index
+const connectedArticlesList = connect(
+  (state) => {
+    const articlesObj = state.articles.find((a) => a.page === state.currentPage)
+    console.log(state.nextStartDate)
+    return {
+      articles: articlesObj ? articlesObj.articles : [],
+      currentPage: state.currentPage,
+      nextStartDate: state.nextStartDate
+    }
+  },
+  {
+    fetchArticles,
+  }
+)(ArticlesList)
+
+export default connectedArticlesList
