@@ -21,8 +21,11 @@ const fetchArticles = (skip = 0) => {
 const fetchSingleArticle = id => {
   return axios.get(singlePageUrl(id)).then(response => {
 
-    const data = _.get(response, 'data.parse.text.*', '')
-    return data
+    const data = _.get(response, 'data.parse', {})
+    return {
+      title: data.title,
+      html: data.text['*']
+    }
   })
 }
 
