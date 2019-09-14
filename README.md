@@ -17,3 +17,13 @@ In the project directory, you can run:
 
 #### How to run tests 
 ### `node src/integration.test.js`
+
+
+##TODO
+0. Fix bug in initial API date & remove hardcode
+1. Write tests
+1. Style Article details page
+2. Use redux to fetch article details
+3. Improve paginator & use https://react-bootstrap.github.io/components/pagination/ instead of ButtonGroup
+###NOTES
+WIKI API for fetching articles has not `skip` option. We need to use `rccontinue` date to request recent changes after that date. So after each request, I store this in redux and use in future requests.

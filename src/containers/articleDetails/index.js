@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import _ from 'lodash'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Navbar } from 'react-bootstrap'
 import { fetchSingleArticle } from '../../api'
 
 class ArticleDetails extends Component {
@@ -35,21 +35,23 @@ class ArticleDetails extends Component {
     }
 
     return (
-      <Container>
-        <Row>
-          <Col>
+      <>
+        <Navbar bg="dark" variant="dark" sticky={'top'} className="justify-content-center">
+          <Navbar.Brand href="/">
+            📙 {article.title}
             <Link to="/">🔙</Link>
-          </Col>
-          <Col>
-            <h4>{article.title}</h4>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <div dangerouslySetInnerHTML={{ __html: article.html }} />
-          </Col>
-        </Row>
-      </Container>
+
+          </Navbar.Brand>
+        </Navbar>
+
+        <Container>
+          <Row>
+            <Col>
+              <div dangerouslySetInnerHTML={{ __html: article.html }} />
+            </Col>
+          </Row>
+         </Container>
+      </>
     )
   }
 }
