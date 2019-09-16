@@ -20,26 +20,28 @@ class ArticlesList extends Component {
   render() {
     const { articles, isFetching, currentPage, fetchArticles, lastPage, navigatePage, nextStartDate } = this.props
 
+    const BoundPaginator = (
+      <Paginator
+        currentPage={currentPage}
+        fetchArticles={() => fetchArticles(lastPage + 1, nextStartDate)}
+        lastPage={lastPage}
+        navigatePage={navigatePage}
+      />
+    )
+
     const content = (
       <>
         <Row>
-          <Col>
-            <Paginator
-              currentPage={currentPage}
-              fetchArticles={() => fetchArticles(lastPage + 1, nextStartDate)}
-              lastPage={lastPage}
-              navigatePage={navigatePage}
-            />
-          </Col>
+          <Col>{BoundPaginator}</Col>
         </Row>
         <Row>
           {articles.map((a, index) => (
             <ArticleCard index={index} pageId={a.pageId} timeStamp={a.timeStamp} title={a.title} />
           ))}
         </Row>
-        <Col>
-          <Paginator currentPage={currentPage} fetchArticles={fetchArticles} lastPage={lastPage} navigatePage={navigatePage} />
-        </Col>
+        <Row>
+          <Col>{BoundPaginator}</Col>
+        </Row>
       </>
     )
     return (

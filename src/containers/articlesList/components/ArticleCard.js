@@ -7,7 +7,7 @@ const CardImage = <Card.Img variant="top" src="http://via.placeholder.com/320x18
 
 const ArticleCard = ({ index, pageId, title, timeStamp }) => (
   <Col xs={12} sm={6} md={4} lg={3} key={index} className={'articleCard mb-3'}>
-    <Link to={`/details/${pageId}`}>
+    <Link to={`/details/${pageId}`} className={'text-decoration-none'}>
       <Card>
         {CardImage}
         <Card.Body>

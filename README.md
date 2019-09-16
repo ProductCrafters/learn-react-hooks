@@ -1,6 +1,14 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Integration Tests
+##TODO
+
+1. Style Article details page
+2. Improve paginator & use https://react-bootstrap.github.io/components/pagination/ instead of ButtonGroup
+3. Add proptypes
+
+###NOTES
+WIKI API for fetching articles has not `skip` option. We need to use `rccontinue` date to request recent changes after that date. So after each request, I store this in redux and use in future requests.
+
+### Integration Tests
 
 [selenium-webdriver](https://seleniumhq.github.io/selenium/docs/api/javascript/) is used for integration tests.
 To run it:
@@ -17,10 +25,3 @@ In the project directory, you can run:
 
 #### How to run tests 
 ### `node src/integration.test.js`
-
-
-##TODO
-1. Style Article details page
-2. Improve paginator & use https://react-bootstrap.github.io/components/pagination/ instead of ButtonGroup
-###NOTES
-WIKI API for fetching articles has not `skip` option. We need to use `rccontinue` date to request recent changes after that date. So after each request, I store this in redux and use in future requests.
