@@ -12,7 +12,13 @@ export const NAVIGATE_PAGE = 'NAVIGATE_PAGE'
 
 export const fetchArticlesStart = createAction(FETCH_ARTICLES_START, (page) => ({ page }))
 export const fetchArticlesSuccess = createAction(FETCH_ARTICLES_SUCCESS, (articles, page, nextStartDate) => ({ articles, page, nextStartDate }))
+export const fetchArticlesError = createAction(FETCH_ARTICLES_ERROR)
 
 export const navigatePage = createAction(NAVIGATE_PAGE)
+
+export const fetchArticleDetailsStart = createAction(FETCH_ARTICLE_DETAILS_START, id => ({ id }))
+export const fetchArticleDetailsSuccess = createAction(FETCH_ARTICLE_DETAILS_SUCCESS, (id, article) => ({ id, article }))
+export const fetchArticleDetailsError = createAction(FETCH_ARTICLE_DETAILS_ERROR)
+
 
 

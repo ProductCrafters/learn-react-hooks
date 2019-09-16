@@ -1,10 +1,12 @@
 import _ from 'lodash'
 import axios from 'axios'
 import moment from 'moment'
-const url = (startDate) =>
-  `https://en.wikipedia.org/w/api.php?action=query&list=recentchanges&format=json&rcstart=${startDate}&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=20&rcdir=newer&origin=*`
 
-const singlePageUrl = (pageId) => `https://en.wikipedia.org/w/api.php?action=parse&pageid=${pageId}&format=json&origin=*`
+const apiBaseUrl = 'https://en.wikipedia.org/w/api.php'
+const url = (startDate) =>
+  `${apiBaseUrl}?action=query&list=recentchanges&format=json&rcstart=${startDate}&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=20&rcdir=newer&origin=*`
+
+const singlePageUrl = (pageId) => `${apiBaseUrl}?action=parse&pageid=${pageId}&format=json&origin=*`
 
 const now =
   moment()
@@ -12,7 +14,7 @@ const now =
     .add('hours', -1)
     .format(`YYYY-MM-DDTHH:mm:ss`) + 'Z'
 
-const fetchArticles = (startDate) => {
+const fetchArticlesList = (startDate) => {
   return axios
     .get(url(startDate || now))
     .then((response) => {
@@ -31,7 +33,7 @@ const fetchArticles = (startDate) => {
     })
 }
 
-const fetchSingleArticle = (id) => {
+const fetchArticleDetails = (id) => {
   return axios.get(singlePageUrl(id)).then((response) => {
     const data = _.get(response, 'data.parse', {})
     return {
@@ -41,4 +43,4 @@ const fetchSingleArticle = (id) => {
   })
 }
 
-export { fetchArticles, fetchSingleArticle }
+export { fetchArticlesList, fetchArticleDetails }

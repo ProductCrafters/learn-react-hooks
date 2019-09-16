@@ -2,29 +2,22 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import _ from 'lodash'
 import { Container, Row, Col, Navbar } from 'react-bootstrap'
-import { fetchSingleArticle } from '../../api'
+import { connect } from 'react-redux'
+import { fetchArticleDetails } from '../../logic'
 
 class ArticleDetails extends Component {
-  state = {
-    article: null,
-  }
-
   componentDidMount() {
-    const pageId = _.get(this, 'props.match.params.pageId', null)
+    const { article, fetchArticleDetailsAction, pageId } = this.props
 
-    if (!pageId) {
-      console.log('page id is not defined')
-    } else {
-      fetchSingleArticle(pageId).then((article) => {
-        this.setState({ article })
-      })
+    if (!article) {
+      fetchArticleDetailsAction(pageId)
     }
   }
 
   render() {
-    const { article } = this.state
+    const { isFetching, article } = this.props
 
-    if (!article) {
+    if (isFetching || !article) {
       return (
         <Container>
           <Row>
@@ -37,10 +30,10 @@ class ArticleDetails extends Component {
     return (
       <>
         <Navbar bg="dark" variant="dark" sticky={'top'} className="justify-content-center">
-          <Navbar.Brand href="/">
-            📙 <span className={'articleName'}>{article.title}</span>
-            <Link to="/">🔙</Link>
-
+          <Navbar.Brand>
+            <Link to="/">
+              📙 <span className={'articleName'}>{article.title}</span>
+            </Link>
           </Navbar.Brand>
         </Navbar>
 
@@ -50,10 +43,27 @@ class ArticleDetails extends Component {
               <div dangerouslySetInnerHTML={{ __html: article.html }} />
             </Col>
           </Row>
-         </Container>
+        </Container>
       </>
     )
   }
 }
 
-export default ArticleDetails
+const connectedArticleDetails = connect(
+  ({ articleDetails }, props) => {
+    const pageId = _.get(props, 'match.params.pageId', null)
+
+    const articleObj = articleDetails.list.find((a) => a.id === pageId)
+
+    return {
+      article: articleObj ? articleObj.article : null,
+      isFetching: articleDetails.isFetching,
+      pageId,
+    }
+  },
+  {
+    fetchArticleDetailsAction: fetchArticleDetails,
+  }
+)(ArticleDetails)
+
+export default connectedArticleDetails

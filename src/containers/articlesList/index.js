@@ -73,15 +73,15 @@ class ArticlesList extends Component {
 }
 
 const connectedArticlesList = connect(
-  (state) => {
-    const articlesObj = state.articles.find((a) => a.page === state.currentPage)
-    const lastPage = _.maxBy(state.articles, 'page') || { page: 1 }
+  ({ articlesList }) => {
+    const articlesObj = articlesList.articles.find((a) => a.page === articlesList.currentPage)
+    const lastPage = _.maxBy(articlesList.articles, 'page') || { page: 1 }
     return {
       articles: articlesObj ? articlesObj.articles : [],
-      isFetching: state.isFetching,
-      currentPage: state.currentPage,
+      isFetching: articlesList.isFetching,
+      currentPage: articlesList.currentPage,
       lastPage: lastPage.page,
-      nextStartDate: state.nextStartDate,
+      nextStartDate: articlesList.nextStartDate,
     }
   },
   {

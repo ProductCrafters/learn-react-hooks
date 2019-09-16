@@ -1,7 +1,14 @@
 export default {
-  articles: [],
-  isFetching: false,
-  currentPage: 1,
-  nextStartDate: null,
-  error: null,
+  articlesList: {
+    articles: [],
+    isFetching: false,
+    currentPage: 1,
+    nextStartDate: null,
+    error: null,
+  },
+  articleDetails: {
+    list: [],
+    isFetching: false,
+    error: null
+  },
 }

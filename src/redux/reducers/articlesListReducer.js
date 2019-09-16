@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions'
-import { FETCH_ARTICLES_START, FETCH_ARTICLES_SUCCESS, NAVIGATE_PAGE } from './actions'
-import initialState from './initialState'
+import { FETCH_ARTICLES_START, FETCH_ARTICLES_SUCCESS, NAVIGATE_PAGE } from '../actions'
+import initialState from '../initialState'
 
-const reducer = handleActions(
+const articlesListReducer = handleActions(
   {
     [FETCH_ARTICLES_START]: (state) => ({
       ...state, isFetching: true
@@ -19,7 +19,7 @@ const reducer = handleActions(
       currentPage: payload,
     }),
   },
-  initialState
+  initialState.articlesList
 )
 
-export default reducer
+export default articlesListReducer
