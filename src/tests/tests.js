@@ -22,13 +22,13 @@ const expect = chai.expect
 
       afterEach(async () => await page.quit())
 
-      it('can load 20 articles', async () => {
-        const result = await page.findByXPath(`//div[contains(@class, 'article')]`)
-        expect(result.length).to.equal(20)
+      it('can load 12 articles', async () => {
+        const result = await page.findByXPath(`//div[contains(@class, 'articleCard')]`)
+        expect(result.length).to.equal(12)
       })
 
       it('can browse to article details', async () => {
-        const link = await page.findSingleByXPath(`(//div[contains(@class, 'article')]/a)[3]`)
+        const link = await page.findSingleByXPath(`(//div[contains(@class, 'articleTitle')])[3]`)
         const linkText = await link.getText()
 
         await link.click()
@@ -38,8 +38,8 @@ const expect = chai.expect
       })
 
       it('can fetch articles for the second page', async () => {
-        const fetchButton = await page.findSingleByXPath(`//button[contains(@class, 'fetchMoreButton')]`)
-        const pagerButtonSelector = `(//div[contains(@class, 'btn-group')])[1]/button[contains(@class, 'pageButton')]`
+        const fetchButton = await page.findSingleByXPath(`//*[contains(@class, 'fetchMoreButton')]`)
+        const pagerButtonSelector = `(//ul[contains(@class, 'pagination')])[1]/*[contains(@class, 'pageButton')]`
         await fetchButton.click()
         await page.findSingleByXPath(`//h5[contains(@class, 'loading')]`)
 

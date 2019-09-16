@@ -3,8 +3,9 @@ import axios from 'axios'
 import moment from 'moment'
 
 const apiBaseUrl = 'https://en.wikipedia.org/w/api.php'
+const articlesPerPage = 12
 const url = (startDate) =>
-  `${apiBaseUrl}?action=query&list=recentchanges&format=json&rcstart=${startDate}&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=20&rcdir=newer&origin=*`
+  `${apiBaseUrl}?action=query&list=recentchanges&format=json&rcstart=${startDate}&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=${articlesPerPage}&rcdir=newer&origin=*`
 
 const singlePageUrl = (pageId) => `${apiBaseUrl}?action=parse&pageid=${pageId}&format=json&origin=*`
 
