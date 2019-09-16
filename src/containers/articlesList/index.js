@@ -26,7 +26,7 @@ class ArticlesList extends Component {
       return (
         <ButtonGroup>
           {_.range(1, lastPage + 1).map((p) => (
-            <Button disabled={p === currentPage} onClick={() => navigatePage(p)} className={'pageButton'}>
+            <Button key={p} disabled={p === currentPage} onClick={() => navigatePage(p)} className={'pageButton'}>
               {p}
             </Button>
           ))}
@@ -44,8 +44,8 @@ class ArticlesList extends Component {
     const content = (
       <>
         <Row>{this.paginator()}</Row>
-        {articles.map((a) => (
-          <Row>
+        {articles.map((a, index) => (
+          <Row key={index}>
             <Col className={'article'}>
               <Link to={`/details/${a.pageId}`}>{a.title}</Link>
               <p>🕒 {timeFromNowAgo(a.timeStamp)}</p>

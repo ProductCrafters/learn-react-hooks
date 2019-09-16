@@ -1,14 +1,18 @@
 import _ from 'lodash'
 import axios from 'axios'
 import moment from 'moment'
-const url = startDate =>
+const url = (startDate) =>
   `https://en.wikipedia.org/w/api.php?action=query&list=recentchanges&format=json&rcstart=${startDate}&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=20&rcdir=newer&origin=*`
 
 const singlePageUrl = (pageId) => `https://en.wikipedia.org/w/api.php?action=parse&pageid=${pageId}&format=json&origin=*`
 
-const now = '2019-08-29T10:59:20Z' || moment().format("YYYY-MM-DDThh:mm:ss").toString()
+const now =
+  moment()
+    .utc()
+    .add('hours', -1)
+    .format(`YYYY-MM-DDTHH:mm:ss`) + 'Z'
 
-const fetchArticles = (startDate ) => {
+const fetchArticles = (startDate) => {
   return axios
     .get(url(startDate || now))
     .then((response) => {
@@ -17,7 +21,8 @@ const fetchArticles = (startDate ) => {
       const articles = data.map((d) => ({ title: d.title, pageId: d.pageid, timeStamp: d.timestamp }))
 
       return {
-        articles, nextStartDate
+        articles,
+        nextStartDate,
       }
     })
     .catch(function(error) {
@@ -26,13 +31,12 @@ const fetchArticles = (startDate ) => {
     })
 }
 
-const fetchSingleArticle = id => {
-  return axios.get(singlePageUrl(id)).then(response => {
-
+const fetchSingleArticle = (id) => {
+  return axios.get(singlePageUrl(id)).then((response) => {
     const data = _.get(response, 'data.parse', {})
     return {
       title: data.title,
-      html: data.text['*']
+      html: data.text['*'],
     }
   })
 }
