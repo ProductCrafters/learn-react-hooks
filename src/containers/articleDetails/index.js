@@ -38,7 +38,7 @@ class ArticleDetails extends Component {
       <>
         <Navbar bg="dark" variant="dark" sticky={'top'} className="justify-content-center">
           <Navbar.Brand href="/">
-            📙 {article.title}
+            📙 <span className={'articleName'}>{article.title}</span>
             <Link to="/">🔙</Link>
 
           </Navbar.Brand>

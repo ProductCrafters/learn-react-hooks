@@ -21,35 +21,44 @@ class ArticlesList extends Component {
   // _1_ >>
   // 1,2,3,4,_5_ >>
   paginator = () => {
-    const { currentPage, lastPage, nextStartDate, navigatePage } = this.props
+    const { currentPage, lastPage, nextStartDate, navigatePage, fetchArticles } = this.props
     if (lastPage <= 5) {
       return (
         <ButtonGroup>
           {_.range(1, lastPage + 1).map((p) => (
-            <Button disabled={p === currentPage} onClick={() => navigatePage(p)}>
+            <Button disabled={p === currentPage} onClick={() => navigatePage(p)} className={'pageButton'}>
               {p}
             </Button>
           ))}
-          <Button onClick={() => this.fetchPage(lastPage + 1, nextStartDate)}>⏭️</Button>
+          <Button onClick={() => fetchArticles(lastPage + 1, nextStartDate)} className={'fetchMoreButton'}>
+            ⏭️
+          </Button>
         </ButtonGroup>
       )
     }
   }
 
-  fetchPage = (page, nextDate) => {
-    this.props.fetchArticles(page, nextDate)
-  }
-
   render() {
-    const { articles } = this.props
+    const { articles, isFetching } = this.props
 
-    if (articles.length === 0) {
-      return (
-        <Container>
-          <h5>Fetching latest articles...</h5>
-        </Container>
-      )
-    }
+    const content = (
+      <>
+        <Row>{this.paginator()}</Row>
+        {articles.map((a) => (
+          <Row>
+            <Col className={'article'}>
+              <Link to={`/details/${a.pageId}`}>{a.title}</Link>
+              <p>🕒 {timeFromNowAgo(a.timeStamp)}</p>
+            </Col>
+          </Row>
+        ))}
+        <Row>
+          <Col>
+            <Row>{this.paginator()}</Row>
+          </Col>
+        </Row>
+      </>
+    )
 
     return (
       <>
@@ -57,22 +66,7 @@ class ArticlesList extends Component {
           <Navbar.Brand>📙 Recent Wiki articles</Navbar.Brand>
         </Navbar>
 
-        <Container>
-          <Row>{this.paginator()}</Row>
-          {articles.map((a) => (
-            <Row>
-              <Col>
-                <Link to={`/details/${a.pageId}`}>{a.title}</Link>
-                <p>🕒 {timeFromNowAgo(a.timeStamp)}</p>
-              </Col>
-            </Row>
-          ))}
-          <Row>
-            <Col>
-              <Row>{this.paginator()}</Row>
-            </Col>
-          </Row>
-        </Container>
+        <Container>{isFetching ? <h5 className={'loading'}>Fetching latest articles...</h5> : content}</Container>
       </>
     )
   }
@@ -84,6 +78,7 @@ const connectedArticlesList = connect(
     const lastPage = _.maxBy(state.articles, 'page') || { page: 1 }
     return {
       articles: articlesObj ? articlesObj.articles : [],
+      isFetching: state.isFetching,
       currentPage: state.currentPage,
       lastPage: lastPage.page,
       nextStartDate: state.nextStartDate,

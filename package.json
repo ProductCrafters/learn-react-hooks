@@ -18,12 +18,15 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.2.0",
     "selenium-webdriver": "4.0.0-alpha.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "mocha src/tests/tests.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
