@@ -1,76 +1,63 @@
-import React, { Component } from 'react'
-import { Container, Row, Col, Navbar } from 'react-bootstrap'
-import { connect } from 'react-redux'
+import React, { useState } from 'react'
+import UIComponent from './uiComponent'
+import { fetchArticlesList } from '../../api'
 import _ from 'lodash'
-import { fetchArticles } from '../../logic'
-import { navigatePage } from '../../redux/actions'
-import Paginator from './components/Paginator'
-import ArticleCard from './components/ArticleCard'
 
-class ArticlesList extends Component {
-  componentDidMount() {
-    const { articles, currentPage, fetchArticles, nextStartDate } = this.props
-    if (articles.length > 0) {
-      return
-    }
-
-    fetchArticles(currentPage, nextStartDate)
-  }
-
-  render() {
-    const { articles, isFetching, currentPage, fetchArticles, lastPage, navigatePage, nextStartDate } = this.props
-
-    const BoundPaginator = (
-      <Paginator
-        currentPage={currentPage}
-        fetchArticles={() => fetchArticles(lastPage + 1, nextStartDate)}
-        lastPage={lastPage}
-        navigatePage={navigatePage}
-      />
-    )
-
-    const content = (
-      <>
-        <Row>
-          <Col>{BoundPaginator}</Col>
-        </Row>
-        <Row>
-          {articles.map((a, index) => (
-            <ArticleCard index={index} pageId={a.pageId} timeStamp={a.timeStamp} title={a.title} />
-          ))}
-        </Row>
-        <Row>
-          <Col>{BoundPaginator}</Col>
-        </Row>
-      </>
-    )
-    return (
-      <>
-        <Navbar bg="dark" variant="dark" sticky={'top'} className="justify-content-center">
-          <Navbar.Brand>📙 Recent Wiki articles</Navbar.Brand>
-        </Navbar>
-        ​<Container className="py-4">{isFetching ? <h5 className={'loading'}>Fetching latest articles...</h5> : content}</Container>
-      </>
-    )
-  }
+const articlesInitialState = {
+  articles: [],
+  currentPage: 1,
+  nextStartDate: null,
 }
 
-const connectedArticlesList = connect(
-  ({ articlesList }) => {
-    const articlesObj = articlesList.articles.find((a) => a.page === articlesList.currentPage)
-    const lastPage = _.maxBy(articlesList.articles, 'page') || { page: 1 }
-    return {
-      articles: articlesObj ? articlesObj.articles : [],
-      isFetching: articlesList.isFetching,
-      currentPage: articlesList.currentPage,
-      lastPage: lastPage.page,
-      nextStartDate: articlesList.nextStartDate,
-    }
-  },
-  {
-    fetchArticles,
-    navigatePage,
-  }
-)(ArticlesList)
+const fetchingInitialState = {
+  isFetching: false,
+  error: null,
+}
 
-export default connectedArticlesList
+function ArticleList() {
+  const [articlesState, updateArticlesState] = useState(articlesInitialState)
+  const [fetchingState, updateFetchingState] = useState(fetchingInitialState)
+
+  const { articles, currentPage } = articlesState
+  const currentArticlesObj = articles.find((a) => a.page === currentPage)
+  const currentArticles = currentArticlesObj ? currentArticlesObj.articles : []
+  const lastPage = _.maxBy(articles, 'page') || { page: 1 }
+
+  const fetchPage = (page) => {
+    const { nextStartDate } = articlesState
+
+    updateFetchingState((state) => ({
+      ...state,
+      isFetching: true,
+    }))
+
+    fetchArticlesList(nextStartDate).then((res) => {
+      updateFetchingState((state) => ({
+        ...state,
+        isFetching: false,
+      }))
+      updateArticlesState((state) => ({
+        ...state,
+        articles: [...state.articles, { page, articles: res.articles }],
+        nextStartDate: res.nextStartDate.substr(0, res.nextStartDate.indexOf('|')),
+        currentPage: page,
+      }))
+    })
+  }
+
+  return (
+    <UIComponent
+      articlesState={{
+        currentArticles,
+        lastPage: lastPage.page,
+        currentPage,
+      }}
+      updateArticlesState={updateArticlesState}
+      fetchingState={fetchingState}
+      updateFetchingState={updateFetchingState}
+      fetchPage={fetchPage}
+    />
+  )
+}
+
+export default ArticleList
