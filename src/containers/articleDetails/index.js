@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import useReactRouter from 'use-react-router'
 import _ from 'lodash'
 import ArticleDetails from './uiComponent'
@@ -20,6 +20,12 @@ function ArticleDetailsContainer({ articlesDetails, setArticlesDetails, fetching
       updateFetchingState((state) => ({ ...state, isFetching: false }))
     })
   }
+
+  useEffect(() => {
+    if (!fetchingState.isFetching && !article) {
+      fetchArticleDetails(pageId)
+    }
+  })
 
   return (
     <ArticleDetails

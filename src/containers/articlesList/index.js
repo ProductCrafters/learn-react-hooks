@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import UIComponent from './uiComponent'
 import { fetchArticlesList } from '../../api'
 import _ from 'lodash'
 
-
 function ArticleList({ articlesState, updateArticlesState, fetchingState, updateFetchingState }) {
-
   const { articles, currentPage } = articlesState
   const currentArticlesObj = articles.find((a) => a.page === currentPage)
   const currentArticles = currentArticlesObj ? currentArticlesObj.articles : []
@@ -32,6 +30,12 @@ function ArticleList({ articlesState, updateArticlesState, fetchingState, update
       }))
     })
   }
+
+  useEffect(() => {
+    if (!fetchingState.isFetching && currentArticles.length === 0) {
+      fetchPage(1)
+    }
+  })
 
   return (
     <UIComponent
