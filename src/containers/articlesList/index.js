@@ -1,22 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import UIComponent from './uiComponent'
 import { fetchArticlesList } from '../../api'
 import _ from 'lodash'
 
-const articlesInitialState = {
-  articles: [],
-  currentPage: 1,
-  nextStartDate: null,
-}
 
-const fetchingInitialState = {
-  isFetching: false,
-  error: null,
-}
-
-function ArticleList() {
-  const [articlesState, updateArticlesState] = useState(articlesInitialState)
-  const [fetchingState, updateFetchingState] = useState(fetchingInitialState)
+function ArticleList({ articlesState, updateArticlesState, fetchingState, updateFetchingState }) {
 
   const { articles, currentPage } = articlesState
   const currentArticlesObj = articles.find((a) => a.page === currentPage)

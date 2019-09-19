@@ -1,69 +1,34 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
+import useReactRouter from 'use-react-router'
 import _ from 'lodash'
-import { Container, Row, Col, Navbar } from 'react-bootstrap'
-import { connect } from 'react-redux'
-import { fetchArticleDetails } from '../../logic'
+import ArticleDetails from './uiComponent'
+import { fetchArticleDetails as fetchArticleDetailsApi } from '../../api'
 
-class ArticleDetails extends Component {
-  componentDidMount() {
-    const { article, fetchArticleDetailsAction, pageId } = this.props
+function ArticleDetailsContainer({ articlesDetails, setArticlesDetails, fetchingState, updateFetchingState }) {
+  const {
+    match: { params },
+  } = useReactRouter()
+  const pageId = _.get(params, 'pageId', null)
+  const articleObj = articlesDetails.find((a) => a.id === pageId)
+  const article = articleObj ? articleObj.article : null
 
-    if (!article) {
-      fetchArticleDetailsAction(pageId)
-    }
+  const fetchArticleDetails = () => {
+    updateFetchingState((state) => ({ ...state, isFetching: true }))
+
+    fetchArticleDetailsApi(pageId).then((res) => {
+      setArticlesDetails((state) => [...state, { id: pageId, article: res }])
+      updateFetchingState((state) => ({ ...state, isFetching: false }))
+    })
   }
 
-  render() {
-    const { isFetching, article } = this.props
-
-    if (isFetching || !article) {
-      return (
-        <Container>
-          <Row>
-            <h4>Loading...</h4>
-          </Row>
-        </Container>
-      )
-    }
-
-    return (
-      <>
-        <Navbar bg="dark" variant="dark" sticky={'top'} className="justify-content-center">
-          <Navbar.Brand>
-            <Link to="/">
-              📙 <span className={'articleName'}>{article.title}</span>
-            </Link>
-          </Navbar.Brand>
-        </Navbar>
-
-        <Container>
-          <Row>
-            <Col>
-              <div dangerouslySetInnerHTML={{ __html: article.html }} />
-            </Col>
-          </Row>
-        </Container>
-      </>
-    )
-  }
+  return (
+    <ArticleDetails
+      article={article}
+      setArticlesDetails={setArticlesDetails}
+      fetchArticleDetails={fetchArticleDetails}
+      isFetching={fetchingState.isFetching}
+    />
+  )
 }
 
-const connectedArticleDetails = connect(
-  ({ articleDetails }, props) => {
-    const pageId = _.get(props, 'match.params.pageId', null)
-
-    const articleObj = articleDetails.list.find((a) => a.id === pageId)
-
-    return {
-      article: articleObj ? articleObj.article : null,
-      isFetching: articleDetails.isFetching,
-      pageId,
-    }
-  },
-  {
-    fetchArticleDetailsAction: fetchArticleDetails,
-  }
-)(ArticleDetails)
-
-export default connectedArticleDetails
+export default ArticleDetailsContainer
