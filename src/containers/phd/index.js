@@ -25,6 +25,7 @@ function allPossibleCases(arr) {
 const res = allPossibleCases(allArrays)
 const allHeaders = []
 
+console.log(res)
 res.forEach((r) => {
   r.split(' ').forEach((rE) => {
     allHeaders.push(rE)
