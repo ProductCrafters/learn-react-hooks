@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { convertArrayToCSV } = require('convert-array-to-csv');
+var excelColumnName = require('excel-column-name');
 
 const extendedRangeValues = {
   0: [0, 0.1, 0.2],
@@ -61,6 +62,18 @@ allHeaders.forEach((v1, i2) => {
   }
 })
 
+const f = (x1,y1,x2,y2) => {
+  // console.log(x1, x2)
+  const x1Letter = excelColumnName.intToExcelCol(x1)
+  const y1Letter = excelColumnName.intToExcelCol(y1)
+  const x2Letter = excelColumnName.intToExcelCol(x2)
+  const y2Letter = excelColumnName.intToExcelCol(y2)
+
+  return `=SQRT((${x1Letter}141-${x2Letter}141)^2+(${y1Letter}142-${y2Letter}142)^2)`
+}
+
+let maxOutput = 1
+
 allHeaders.forEach((v, index) => {
   if (index > 0) {
     const prevV = allHeaders[index - 1];
@@ -70,30 +83,10 @@ allHeaders.forEach((v, index) => {
         if (index > i) {
           return 0;
         }
-        // console.log(prevV, v1)
+        // convert to excel needs +1 for array index to norm and +1 more, so index - 1 + 2 => index + 1, i => i + 2
 
+        return f(index+1, index+1,i+2,i+2)
 
-        if (prevV === 'j1' && v1 === 'g1') {
-          // console.log(res[1][index-1])
-          // console.log(res[2][index-1])
-          // console.log(res[3][index-1])
-          //
-          // console.log(i)
-          // // console.log(allHeaders.indexOf('g1'))
-          // console.log(res[1][i])
-          // console.log(res[2][i])
-          // console.log(res[3][i])
-
-        }
-        return distanceBetween(
-          res[1][index - 1],
-          res[2][index - 1],
-          res[3][index - 1],
-          res[1][i],
-          res[2][i],
-          res[3][i]
-        );
-        // return distanceBetween(x1s[prevV], x2s[prevV], x3s[prevV], x1s[v1], x2s[v1], x3s[v1]);
       }),
     ];
   }
@@ -127,7 +120,7 @@ const csvNewArr = convertArrayToCSV(newArr, {
 
 const fs = require('fs');
 
-fs.writeFile('data_new2.csv', csvNewArr, function(err) {
+fs.writeFile('data_formula.csv', csvNewArr, function(err) {
   if (err) {
     return console.log(err);
   }
