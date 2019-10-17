@@ -14,6 +14,7 @@ const emotionValues = {
   f: [1, 0.5, 1],
   a: [0, 0.5, 0],
   s: [0.5, 1, 0],
+  n: [0.5, 0.5, 0.5],
 };
 
 const distanceBetween = (x1, y1, z1, x2, y2, z2) => {
@@ -42,6 +43,10 @@ _.keys(emotionValues).forEach(k => {
   });
 });
 
+
+
+/// 1   спробувати всі методи
+/// 2   init value: 0, 1 на всі методи
 // console.log(res[1][27])
 
 //    j1, j2, j3
