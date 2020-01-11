@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { convertArrayToCSV } = require('convert-array-to-csv');
+
 var excelColumnName = require('excel-column-name');
 
 const extendedRangeValues = {
@@ -32,21 +33,19 @@ _.keys(emotionValues).forEach(k => {
   extendedTarget[0].forEach(x1 => {
     extendedTarget[1].forEach(x2 => {
       extendedTarget[2].forEach(x3 => {
-        res[0].push(k + '' + i);
-        res[1].push(x1);
-        res[2].push(x2);
-        res[3].push(x3);
 
+        if (i % 2 === 0) {
+          res[0].push(k + '' + i);
+          res[1].push(x1);
+          res[2].push(x2);
+          res[3].push(x3);
+        }
         i++;
       });
     });
   });
 });
 
-
-
-/// 1   спробувати всі методи
-/// 2   init value: 0, 1 на всі методи
 // console.log(res[1][27])
 
 //    j1, j2, j3
@@ -65,7 +64,7 @@ allHeaders.forEach((v1, i2) => {
   if (i2 > 0) {
     newArr[i2][0] = allHeaders[i2 - 1];
   }
-})
+});
 
 const f = (x1,y1,x2,y2) => {
   // console.log(x1, x2)
@@ -74,7 +73,7 @@ const f = (x1,y1,x2,y2) => {
   const x2Letter = excelColumnName.intToExcelCol(x2)
   const y2Letter = excelColumnName.intToExcelCol(y2)
 
-  return `=SQRT((${x1Letter}141-${x2Letter}141)^2+(${y1Letter}142-${y2Letter}142)^2)`
+  return `=SQRT((${x1Letter}89-${x2Letter}89)^2+(${y1Letter}90-${y2Letter}90)^2)`
 }
 
 let maxOutput = 1
@@ -88,15 +87,26 @@ allHeaders.forEach((v, index) => {
         if (index > i) {
           return 0;
         }
-        // convert to excel needs +1 for array index to norm and +1 more, so index - 1 + 2 => index + 1, i => i + 2
-
+        // console.log(prevV, v1)
         return f(index+1, index+1,i+2,i+2)
 
+        // if (prevV === 'j1' && v1 === 'g1') {
+          // console.log(res[1][index-1])
+          // console.log(res[2][index-1])
+          // console.log(res[3][index-1])
+          //
+          // console.log(i)
+          // // console.log(allHeaders.indexOf('g1'))
+          // console.log(res[1][i])
+          // console.log(res[2][i])
+          // console.log(res[3][i])
+        // }
+        // return 0;
+        // return distanceBetween(x1s[prevV], x2s[prevV], x3s[prevV], x1s[v1], x2s[v1], x3s[v1]);
       }),
     ];
   }
 });
-
 
 //   if (index1 === 0) {
 //     return;
@@ -116,16 +126,13 @@ allHeaders.forEach((v, index) => {
 //   ];
 // });
 
-
-
-
 const csvNewArr = convertArrayToCSV(newArr, {
   separator: ';',
 });
 
 const fs = require('fs');
 
-fs.writeFile('data_formula.csv', csvNewArr, function(err) {
+fs.writeFile('table2.csv', csvNewArr, function(err) {
   if (err) {
     return console.log(err);
   }
