@@ -137,3 +137,6 @@ fs.writeFile('table2.csv', csvNewArr, function(err) {
     return console.log(err);
   }
 });
+
+
+

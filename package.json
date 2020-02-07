@@ -8,6 +8,7 @@
     "bootstrap": "4.3.1",
     "clipboardy": "^2.1.0",
     "convert-array-to-csv": "^1.0.9",
+    "convert-csv-to-array": "^1.0.3",
     "excel-column-name": "^1.0.0",
     "lodash": "4.17.15",
     "moment": "2.24.0",
